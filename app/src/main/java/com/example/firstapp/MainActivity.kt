@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
@@ -74,13 +75,10 @@ fun Showcase(viewModel:MainViewModel, modifier: Modifier = Modifier) {
 
     val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
 
-    val firstCountry = countries.firstOrNull()
-    Log.d("Main", "Pierwszy kraj ${firstCountry?.name?.common}")
-
     if (countries.isNotEmpty()){
         countries.forEachIndexed {index, country ->
             //ShowBlock(name = country.name?.common)
-            Log.d("Main", "$index ${country.name?.common}, ${country.name?.official}") //
+            Log.d("Main", "$index ${country.name.common}, ${country.name.official}") //
         }
     }
 
@@ -88,17 +86,26 @@ fun Showcase(viewModel:MainViewModel, modifier: Modifier = Modifier) {
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             countries.forEach { country ->
-                ShowBlock(name = country.name?.common, capital = country.capital[0])
+                ShowBlock(
+                    name = country.name.common,
+                    capital = country.capital?.firstOrNull()?:"",
+                    continent = country.continents?.firstOrNull()?:"")
             }
         }
     }
+
+//    if(countries.isNotEmpty()){
+//         LazyColumn {
+//             items
+//         }
+//    }
 
 
 }
 
 
 @Composable
-fun ShowBlock(name: String?, capital: String?, modifier: Modifier = Modifier){
+fun ShowBlock(name: String?, capital: String?, continent: String?, modifier: Modifier = Modifier){
 
     Card(modifier = Modifier
         .padding(all = 10.dp)
@@ -138,7 +145,7 @@ fun ShowBlock(name: String?, capital: String?, modifier: Modifier = Modifier){
                                 color = Color.White,
 
                                 )
-                            Text(text = "Europe",
+                            Text(text = "$continent",
                                 color = Color.White,)
                         }
                         Row (modifier = Modifier.padding(0.dp,5.dp,0.dp,0.dp)) {

@@ -13,8 +13,8 @@ interface CountryService {
 
     //@Header("Authorization")
 
-    //@GET("/v3.1/all")
-    @GET("/v3.1/independent?status=true&fields=name,capital")
+    @GET("/v3.1/all")
+    //@GET("/v3.1/independent?status=true&fields=name,capital")
 
     suspend fun getCountriesResponse(): Response<List<CountryResponse>>
 
