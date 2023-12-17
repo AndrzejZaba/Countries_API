@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.firstapp.ui.theme.FirstAppTheme
 import com.example.firstapp.ui.theme.MainViewModel
 
@@ -62,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background)
                 {
-                    Showcase(viewModel)
+                    MainView(viewModel)
                 }
             }
         }
@@ -71,62 +73,79 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Showcase(viewModel:MainViewModel, modifier: Modifier = Modifier) {
+fun MainView(viewModel:MainViewModel, modifier: Modifier = Modifier) {
 
     val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
 
-    if (countries.isNotEmpty()){
-        countries.forEachIndexed {index, country ->
-            //ShowBlock(name = country.name?.common)
-            Log.d("Main", "$index ${country.name.common}, ${country.name.official}") //
-        }
-    }
-
-    if (countries.isNotEmpty()){
-
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            countries.forEach { country ->
-                ShowBlock(
-                    name = country.name.common,
-                    capital = country.capital?.firstOrNull()?:"",
-                    continent = country.continents?.firstOrNull()?:"")
-            }
-        }
-    }
-
-//    if(countries.isNotEmpty()){
-//         LazyColumn {
-//             items
-//         }
+    // LOGS with countries data
+//    if (countries.isNotEmpty()){
+//        countries.forEachIndexed {index, country ->
+//            //ShowBlock(name = country.name?.common)
+//            Log.d("Main", "$index ${country.name.common}, ${country.name.official}") //
+//        }
 //    }
 
+
+    
+    LazyColumn {
+        items(countries) {country ->
+            ShowBlock(
+                name = country.name.common,
+                capital = country.capital?.firstOrNull(),
+                continent = country.continents?.firstOrNull(),
+                imageUrl = country.flags.png)
+        }
+    }
+
+//    if (countries.isNotEmpty()){
+//
+//        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+//            countries.forEach { country ->
+//                ShowBlock(
+//                    name = country.name.common,
+//                    capital = country.capital?.firstOrNull()?:"",
+//                    continent = country.continents?.firstOrNull()?:"")
+//            }
+//        }
+//    }
 
 }
 
 
 @Composable
-fun ShowBlock(name: String?, capital: String?, continent: String?, modifier: Modifier = Modifier){
+fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: String,  modifier: Modifier = Modifier){
+
+
 
     Card(modifier = Modifier
         .padding(all = 10.dp)
         .fillMaxWidth()) {
 
-        Column(modifier = Modifier.width(300.dp) ) {
+        Column(modifier = Modifier.width(400.dp) ) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .background(Color(35,37,45))) {
 
                 Row {
-                    Image(
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = "Flag of {$name}",
+                        placeholder = painterResource( id = R.drawable.placeholderimage),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
-                            .border(2.dp, Color.Gray, CircleShape),
-                        painter = painterResource(id = R.drawable.pl),
-                        contentDescription = "Logo",
-                    )
+                            .border(2.dp, Color.Gray, CircleShape))
+//                    Image(
+//                        contentScale = ContentScale.Crop,
+//                        modifier = Modifier
+//                            .size(100.dp)
+//                            .clip(CircleShape)
+//                            .border(2.dp, Color.Gray, CircleShape),
+//                        painter = painterResource(id = R.drawable.pl),
+//                        contentDescription = "Logo",
+//                    )
                     Column (
                         Modifier
                             .width(200.dp)

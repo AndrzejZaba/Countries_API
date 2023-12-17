@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.firstapp.UiState
 import repository.model.Country
 import repository.model.CountryResponse
 import repository.CountryService
@@ -20,8 +21,7 @@ class MainViewModel : ViewModel() {
         //val countryService = CountryService.retrofit.create(CountryService::class.java)
 
     // suspend - operacja wejścia wyjścia związana z połączeniem sieciowym. Czyli będziemy musieli użyć kurtyny (to view model scope.launch)
-        //private suspend fun getCountriesResponse(): retrofit2.Response<CountryResponse> =  countryService.getCountries()
-    //--- tu będzie koniec klasy CountryResponse
+
 
     private val mutableCountriesData = MutableLiveData<List<CountryResponse>>()
     val immutableCountriesData: LiveData<List<CountryResponse>> = mutableCountriesData
