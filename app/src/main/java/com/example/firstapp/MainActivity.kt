@@ -2,6 +2,7 @@ package com.example.firstapp
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,17 +26,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,7 +81,40 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView(viewModel:MainViewModel, modifier: Modifier = Modifier) {
 
-    val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
+    //val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
+    val uiState by viewModel.immutableCountriesData.observeAsState(UiState())
+
+    when {
+        uiState.isLoading -> {
+            // wywołaj funkcję która pokaże loader dla użytkownika
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        uiState.error != null -> {
+            // wywołaj funckję która pokaże komponent typu Snackbar
+            Toast.makeText(LocalContext.current, "${uiState.error}", Toast.LENGTH_SHORT).show()
+        }
+
+        uiState.countries != null -> {
+            uiState.countries?.let{
+            // wywołaj funkcję do krajów
+                LazyColumn {
+                    items(uiState.countries!!) {country ->
+                        ShowBlock(
+                            name = country.name.common,
+                            capital = country.capital?.firstOrNull(),
+                            continent = country.continents?.firstOrNull(),
+                            imageUrl = country.flags.png)
+                    }
+                }
+            }
+
+        }
+        else -> {
+            Log.e("MainView", "żaden stan widoku nie został zdefiniowany $uiState")
+        }
+    }
 
     // LOGS with countries data
 //    if (countries.isNotEmpty()){
@@ -84,34 +123,7 @@ fun MainView(viewModel:MainViewModel, modifier: Modifier = Modifier) {
 //            Log.d("Main", "$index ${country.name.common}, ${country.name.official}") //
 //        }
 //    }
-
-
-    
-    LazyColumn {
-        items(countries) {country ->
-            ShowBlock(
-                name = country.name.common,
-                capital = country.capital?.firstOrNull(),
-                continent = country.continents?.firstOrNull(),
-                imageUrl = country.flags.png)
-        }
-    }
-
-//    if (countries.isNotEmpty()){
-//
-//        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-//            countries.forEach { country ->
-//                ShowBlock(
-//                    name = country.name.common,
-//                    capital = country.capital?.firstOrNull()?:"",
-//                    continent = country.continents?.firstOrNull()?:"")
-//            }
-//        }
-//    }
-
 }
-
-
 @Composable
 fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: String,  modifier: Modifier = Modifier){
 
@@ -125,7 +137,8 @@ fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: Str
 
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .background(Color(35,37,45))) {
+                    .background(Color(35, 37, 45))
+                    .fillMaxWidth()) {
 
                 Row {
                     AsyncImage(
@@ -134,18 +147,14 @@ fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: Str
                         placeholder = painterResource( id = R.drawable.placeholderimage),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.Gray, CircleShape))
-//                    Image(
-//                        contentScale = ContentScale.Crop,
-//                        modifier = Modifier
-//                            .size(100.dp)
+                            .width(150.dp)
+                            .height(75.dp)
+                            .align(Alignment.CenterVertically)
+                            //.size(150.dp)
 //                            .clip(CircleShape)
-//                            .border(2.dp, Color.Gray, CircleShape),
-//                        painter = painterResource(id = R.drawable.pl),
-//                        contentDescription = "Logo",
-//                    )
+//                            .border(2.dp, Color.Gray, CircleShape)
+                    )
+
                     Column (
                         Modifier
                             .width(200.dp)

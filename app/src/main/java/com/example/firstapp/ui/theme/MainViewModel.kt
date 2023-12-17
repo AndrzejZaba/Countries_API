@@ -23,19 +23,24 @@ class MainViewModel : ViewModel() {
     // suspend - operacja wejścia wyjścia związana z połączeniem sieciowym. Czyli będziemy musieli użyć kurtyny (to view model scope.launch)
 
 
-    private val mutableCountriesData = MutableLiveData<List<CountryResponse>>()
-    val immutableCountriesData: LiveData<List<CountryResponse>> = mutableCountriesData
+    private val mutableCountriesData = MutableLiveData<UiState>()
+    val immutableCountriesData: LiveData<UiState> = mutableCountriesData
 
     fun getData(){
+        mutableCountriesData.postValue((UiState(isLoading = true)))
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 val request = countryRepository.getCountryResponse()
-                val countries = request.body()
-                // W tym momencie w zmiennej countries mamy listę krajów pobranych z API
-                // X
-                mutableCountriesData.postValue(countries)
 
+                if(request.isSuccessful) {
+                    val countries = request.body()
+                    // W tym momencie w zmiennej countries mamy listę krajów pobranych z API
+                    mutableCountriesData.postValue(UiState(countries = countries))
+                } else{
+                    mutableCountriesData.postValue((UiState(error = "Fail, code: ${request.code()}")))
+                }
             }catch (e: Exception){
+                mutableCountriesData.postValue(UiState(error = e.message) )
                 Log.e("MainViewModel", "Operacja nie powiodla sie", e)
             }
 
