@@ -7,6 +7,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import java.util.concurrent.TimeUnit
 
 interface CountryService {
@@ -17,6 +18,11 @@ interface CountryService {
     //@GET("/v3.1/independent?status=true&fields=name,capital")
 
     suspend fun getCountriesResponse(): Response<List<CountryResponse>>
+
+    @GET("/v3.1/name/{name}")
+    suspend fun getCountyDetails(@Path("name") name:String) : Response<CountryResponse>
+//    suspend fun getCountyDetails(@Path("name") name:String) : Response<List<CountryResponse>>
+
 
     companion object{
         private const val COUNTRY_URL = "https://restcountries.com/"
