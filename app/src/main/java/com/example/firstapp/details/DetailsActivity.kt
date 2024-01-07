@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -58,27 +61,40 @@ class DetailsActivity : ComponentActivity() {
 }
 
 @Composable
-fun DetailsView(viewModel: DetailsViewModel){
+fun DetailsView(viewModel: DetailsViewModel) {
 
-    val country by viewModel.liveData.observeAsState(null)
+    val country by viewModel.immutableCountriesData.observeAsState()//null)
 
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .background(Color(35, 37, 45))
-            .fillMaxWidth()) {
+    if (country?.isLoading == true) {
+        // Display loading indicator
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp)
+                .padding(16.dp)
 
-        Row {
-            AsyncImage(
-                model = country?.flags?.png,
-                contentDescription = "Flag of {${country?.name}}",
-                placeholder = painterResource(id = R.drawable.placeholderimage),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(75.dp)
-                    .align(Alignment.CenterVertically)
-            )
+        )
+    } else {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(Color(35, 37, 45))
+                .fillMaxWidth()
+        ) {
+
+            Row {
+                AsyncImage(
+                    model = country?.data?.flags?.png,
+                    contentDescription = "Flag of {${country?.data?.name}}",
+                    placeholder = painterResource(id = R.drawable.placeholderimage),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(75.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
         }
     }
 }

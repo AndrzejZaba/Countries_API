@@ -20,8 +20,8 @@ interface CountryService {
     suspend fun getCountriesResponse(): Response<List<CountryResponse>>
 
     @GET("/v3.1/name/{name}")
-    suspend fun getCountyDetails(@Path("name") name:String) : Response<CountryResponse>
-//    suspend fun getCountyDetails(@Path("name") name:String) : Response<List<CountryResponse>>
+    //suspend fun getCountyDetails(@Path("name") name:String) : Response<CountryResponse>
+    suspend fun getCountyDetailsResponse(@Path("name") name: String) : Response<List<CountryResponse>>
 
 
     companion object{
