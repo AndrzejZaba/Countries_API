@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.firstapp.MainView
 import com.example.firstapp.R
@@ -83,17 +88,75 @@ fun DetailsView(viewModel: DetailsViewModel) {
                 .fillMaxWidth()
         ) {
 
-            Row {
+            Box( modifier =  Modifier.width(350.dp).padding(top = 50.dp),
+                contentAlignment = Alignment.Center){
+                Text(text = "${country?.data?.name?.common}",
+                    textAlign = TextAlign.Center,
+                    fontSize = 40.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Row(modifier = Modifier.padding(top = 20.dp)) {
                 AsyncImage(
                     model = country?.data?.flags?.png,
                     contentDescription = "Flag of {${country?.data?.name}}",
                     placeholder = painterResource(id = R.drawable.placeholderimage),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .width(150.dp)
-                        .height(75.dp)
+                        .width(260.dp)
+                        .height(150.dp)
                         .align(Alignment.CenterVertically)
                 )
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Continent: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.continents?.firstOrNull()}",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Capital: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.capital?.firstOrNull()}",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Population: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.population.toString()}",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Area: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.area.toString()}",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Region: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.region}",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)){
+                Text(text = "Subregion: ",
+                    color = Color.White,
+                    fontSize = 24.sp)
+                Text(text = "${country?.data?.subregion}",
+                    color = Color.White,
+                    fontSize = 24.sp)
             }
         }
     }

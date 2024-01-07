@@ -5,14 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.firstapp.UiState
 import com.example.firstapp.UiStateDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import repository.CountryRepository
-import repository.model.Country
 import repository.model.CountryResponse
-import repository.model.Flags
 
 class DetailsViewModel : ViewModel() {
 
@@ -36,7 +33,11 @@ class DetailsViewModel : ViewModel() {
                             name = it.name,
                             capital = it.capital,
                             flags = it.flags,
-                            continents = it.continents
+                            continents = it.continents,
+                            population = it.population,
+                            area = it.area,
+                            region = it.region,
+                            subregion = it.subregion
                         )
                     }
 

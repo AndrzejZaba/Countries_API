@@ -9,7 +9,12 @@ data class UiStateDetails (
         name = Country("",""),
         capital = null,
         flags = Flags(""),
-        continents = null
+        continents = null,
+        population = 0,
+        area = 0.0,
+        region = "",
+        subregion = ""
+
     ),
     val isLoading: Boolean = false,
     val error: String? = null
