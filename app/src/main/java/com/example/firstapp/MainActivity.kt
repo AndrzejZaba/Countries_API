@@ -28,17 +28,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,12 +80,16 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background)
-                {
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Scaffold(
+                        topBar = {MyTopView(viewModel = viewModel)}
+                    ){ scaffoldPaddings ->
                     MainView(
+                        modifier = Modifier.padding(scaffoldPaddings),
                         viewModel = viewModel,
                         onClick = {name -> navigateToDetailsActivity(name)})
-                }
+                }}
             }
         }
     }
@@ -94,8 +106,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView(viewModel:MainViewModel, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
 
+
     //val countries by viewModel.immutableCountriesData.observeAsState(emptyList())
     val uiState by viewModel.immutableCountriesData.observeAsState(UiState())
+    val query by viewModel.filterQuery.observeAsState("")
+
 
     when {
         uiState.isLoading -> {
@@ -110,21 +125,23 @@ fun MainView(viewModel:MainViewModel, onClick: (String) -> Unit, modifier: Modif
         }
 
         uiState.countries != null -> {
-            uiState.countries?.let{
-            // wywołaj funkcję do krajów
-                LazyColumn {
-                    items(uiState.countries!!) {country ->
-                        ShowBlock(
-                            name = country.name.common,
-                            capital = country.capital?.firstOrNull(),
-                            continent = country.continents?.firstOrNull(),
-                            imageUrl = country.flags.png,
-                            onClick = { name -> onClick.invoke(country.name.common)}
-                        )
+            uiState.countries?.let { restCountries ->
+                restCountries.filter { it.name.common.contains(query, true) }
+                    .let { countries ->
+                        // wywołaj funkcję do krajów
+                        LazyColumn(modifier = Modifier.padding(top = 75.dp)) {
+                            items(countries) { country ->
+                                ShowBlock(
+                                    name = country.name.common,
+                                    capital = country.capital?.firstOrNull(),
+                                    continent = country.continents?.firstOrNull(),
+                                    imageUrl = country.flags.png,
+                                    onClick = { name -> onClick.invoke(country.name.common) }
+                                )
+                            }
+                        }
                     }
-                }
             }
-
         }
         else -> {
             Log.e("MainView", "żaden stan widoku nie został zdefiniowany $uiState")
@@ -151,7 +168,7 @@ fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: Str
         .padding(all = 10.dp)
         .fillMaxWidth()
         .clickable {
-            onClick.invoke(name?: "")
+            onClick.invoke(name ?: "")
         }
     ) {
 
@@ -219,7 +236,37 @@ fun ShowBlock(name: String?, capital: String?, continent: String?, imageUrl: Str
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyTopView(viewModel: MainViewModel){
 
+    var searchText by remember { mutableStateOf("") }
+
+    SearchBar(
+        modifier = Modifier.fillMaxWidth(),
+        query = searchText,
+        onQueryChange = { wpisywanyTekst -> searchText = wpisywanyTekst },
+        onSearch = { viewModel.updateFilterQuery(it) },
+        placeholder = { Text(text = "Wyszukaj...") },
+        active = false,
+        onActiveChange = { },
+        leadingIcon = {
+            Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+        },
+        trailingIcon = {
+            Image(
+                modifier = Modifier.clickable {
+                    searchText = ""
+                    viewModel.updateFilterQuery("")
+                },
+                imageVector = Icons.Default.Clear,
+                contentDescription = "Clear"
+            )
+        }
+    ) {
+
+    }
+}
 
 /*
 @Preview(showBackground = true)
