@@ -73,6 +73,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // uruchamiamy z tą linijką tylko raz!
+        //throw RuntimeException("moj pierwszy crash")
+
         viewModel.getData()
 
 

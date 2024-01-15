@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -68,6 +70,11 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.5.3")
     implementation("io.insert-koin:koin-android:3.5.3")
     //implementation("org.koin:koin-androidx-viewmodel:3.4.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
