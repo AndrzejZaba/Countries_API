@@ -64,10 +64,11 @@ import coil.compose.AsyncImage
 import com.example.firstapp.details.DetailsActivity
 import com.example.firstapp.ui.theme.FirstAppTheme
 import com.example.firstapp.ui.theme.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel:MainViewModel by viewModels()
+    private val viewModel:MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

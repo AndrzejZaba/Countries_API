@@ -11,9 +11,11 @@ import kotlinx.coroutines.launch
 import repository.CountryRepository
 import repository.model.CountryResponse
 
-class DetailsViewModel : ViewModel() {
+class DetailsViewModel(
+    private val countryRepository: CountryRepository
+) : ViewModel() {
 
-    private val countryRepository = CountryRepository()
+    //private val countryRepository = CountryRepository()
 
     private val mutableCountryDetails = MutableLiveData<UiStateDetails>()
     val immutableCountriesData: LiveData<UiStateDetails> = mutableCountryDetails

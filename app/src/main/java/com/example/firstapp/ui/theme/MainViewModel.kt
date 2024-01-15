@@ -13,12 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import repository.CountryRepository
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val countryRepository: CountryRepository
+) : ViewModel() {
 
-    // to powinno być w warstwie repository, czyli w osobnej klasie o nazwie CountryRepository
-    private val countryRepository = CountryRepository()
-
-        //val countryService = CountryService.retrofit.create(CountryService::class.java)
+    //private val countryRepository = CountryRepository()
 
     // suspend - operacja wejścia wyjścia związana z połączeniem sieciowym. Czyli będziemy musieli użyć kurtyny (to view model scope.launch)
 

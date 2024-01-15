@@ -36,10 +36,11 @@ import coil.compose.AsyncImage
 import com.example.firstapp.MainView
 import com.example.firstapp.R
 import com.example.firstapp.ui.theme.FirstAppTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailsActivity : ComponentActivity() {
 
-    private val viewModel:DetailsViewModel by viewModels()
+    private val viewModel:DetailsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
