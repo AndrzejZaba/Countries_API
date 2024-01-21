@@ -151,14 +151,6 @@ fun MainView(viewModel:MainViewModel, onClick: (String) -> Unit, modifier: Modif
             Log.e("MainView", "żaden stan widoku nie został zdefiniowany $uiState")
         }
     }
-
-    // LOGS with countries data
-//    if (countries.isNotEmpty()){
-//        countries.forEachIndexed {index, country ->
-//            //ShowBlock(name = country.name?.common)
-//            Log.d("Main", "$index ${country.name.common}, ${country.name.official}") //
-//        }
-//    }
 }
 
 
@@ -272,13 +264,5 @@ fun MyTopView(viewModel: MainViewModel){
     }
 }
 
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FirstAppTheme {
-        //Showcase("Android", viewModel = )
-    }
-}
- */
+
 
